@@ -1,0 +1,6 @@
+# Ignore all appsettings files (including development & production)
+appsettings*.json
+
+# Ignore bin/ and obj/ folders (optional but good practice)
+bin/
+obj/
