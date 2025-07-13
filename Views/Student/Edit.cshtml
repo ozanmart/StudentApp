@@ -1,0 +1,24 @@
+@model StudentApp.Models.Student
+
+<h2>Edit Student</h2>
+
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="Id" />
+    <div>
+        <label asp-for="Name"></label>
+        <input asp-for="Name" />
+    </div>
+    <div>
+        <label asp-for="Email"></label>
+        <input asp-for="Email" />
+    </div>
+    <div>
+        <label asp-for="DateOfBirth"></label>
+        <input asp-for="DateOfBirth" />
+    </div>
+    <div>
+        <label asp-for="Major"></label>
+        <input asp-for="Major" />
+    </div>
+    <button type="submit">Save</button>
+</form>

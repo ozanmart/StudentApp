@@ -1,0 +1,35 @@
+@model List<StudentApp.Models.Student>
+
+<h2>All Students</h2>
+<a href="/students/create">Create New</a>
+
+<table>
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>DateOfBirth</th>
+        <th>Major</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var student in Model)
+    {
+        <tr>
+            <td>@student.Name</td>
+            <td>@student.Email</td>
+            <td>@student.DateOfBirth.ToString("MM/dd/yyyy")</td>
+            <td>@student.Major</td>
+            <td>
+                <a href="/students/@student.Id">View</a> |
+                <a href="/students/edit/@student.Id">Edit</a> |
+                <a href="/students/delete/@student.Id">Delete</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
+
+<form asp-controller="Auth" asp-action="Logout" method="post">
+    <button type="submit">Logout</button>
+</form>

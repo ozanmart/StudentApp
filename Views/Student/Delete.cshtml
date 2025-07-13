@@ -1,0 +1,9 @@
+@model StudentApp.Models.Student
+
+<h2>Delete Student</h2>
+<p>Are you sure you want to delete <strong>@Model.Name</strong>?</p>
+
+<form asp-action="Delete" method="post">
+    <button type="submit">Yes, delete</button>
+</form>
+<a href="/students">Cancel</a>
