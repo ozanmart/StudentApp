@@ -1,14 +1,14 @@
 using SendGrid;
 using SendGrid.Helpers.Mail;
 
-namespace StudentApp.Models;
+namespace StudentApp.Services;
 
-public class EmailSender : IEmailSender
+public class EmailService : IEmailService
 {
     private readonly string _apiKey;
-    private readonly ILogger<EmailSender> _logger;
+    private readonly ILogger<EmailService> _logger;
 
-    public EmailSender(IConfiguration configuration, ILogger<EmailSender> logger)
+    public EmailService(IConfiguration configuration, ILogger<EmailService> logger)
     {
         _apiKey = configuration["SendGrid:ApiKey"]; // will come from appsettings.json
         _logger = logger;

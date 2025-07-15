@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using StudentApp.Data;
 using StudentApp.Models;
+using StudentApp.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,7 +10,8 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddTransient<IEmailSender, EmailSender>();
+builder.Services.AddTransient<IEmailService, EmailService>();
+builder.Services.AddScoped<IStudentService, StudentService>();
 builder.Services.AddAuthentication("MyCookie")
     .AddCookie("MyCookie", options =>
     {

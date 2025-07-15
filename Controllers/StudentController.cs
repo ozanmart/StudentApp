@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using StudentApp.Data;
 using StudentApp.Models;
+using StudentApp.Services;
 
 namespace StudentApp.Controllers;
 
@@ -11,26 +12,28 @@ namespace StudentApp.Controllers;
 public class StudentController : Controller
 {
     private readonly AppDbContext _context;
-    private readonly IEmailSender _emailSender;
-    public StudentController(AppDbContext context, IEmailSender emailSender)
+    private readonly IEmailService _emailService;
+    private readonly IStudentService _studentService;
+    public StudentController(AppDbContext context, IEmailService emailService, IStudentService studentService)
     {
         _context = context;
-        _emailSender = emailSender;
+        _emailService = emailService;
+        _studentService = studentService;
     }
     
     // GET: /students
     [HttpGet("")]
     public async Task<IActionResult> Index()
     {
-        var students = await _context.Students.ToListAsync();
+        var students = await _studentService.GetAllStudentsAsync();
         return View(students);
     }
 
     // GET: /students/{id:int} ie. /student/1
     [HttpGet("{id:int}")]
-    public async Task<IActionResult> GetStudentById(int? id)
+    public async Task<IActionResult> GetStudentById(int id)
     {
-        var student = await _context.Students.FindAsync(id);
+        var student = await _studentService.GetStudentByIdAsync(id);
         return student == null ? NotFound() : View("Index", new List<Student> {student});
     }
     
@@ -47,12 +50,18 @@ public class StudentController : Controller
     public async Task<IActionResult> Create(Student student)
     {
         if (!ModelState.IsValid) return View(student);
+
+        var successful = await _studentService.CreateStudentAsync(student);
+        if (!successful) 
+        { 
+            ModelState.AddModelError("", "Failed to create student. Please try again."); 
+            return View(student);
+        }
         
-        await _context.Students.AddAsync(student);
-        await _context.SaveChangesAsync();
+        // Send welcome email
         try
         {
-            await _emailSender.SendEmailAsync(student.Email, "Welcome to Student App",
+            await _emailService.SendEmailAsync(student.Email, "Welcome to Student App",
                 $"Hello {student.Name}, welcome to our student app!\npeace\nOzan");
         }
         catch (Exception e)
@@ -68,7 +77,7 @@ public class StudentController : Controller
     {
         if (id == null) return NotFound();
         
-        var student = await _context.Students.FindAsync(id);
+        var student = await _studentService.GetStudentByIdAsync(id.Value);
         return student == null ? NotFound() : View(student);
     }
     
@@ -84,8 +93,14 @@ public class StudentController : Controller
         if (!await _context.Students.AnyAsync(s => s.Id == id))
             return NotFound();
         
-        _context.Update(student);
-        await _context.SaveChangesAsync();
+        var success = await _studentService.UpdateStudentAsync(student);
+        
+        if (!success)
+        {
+            ModelState.AddModelError("", "Failed to update student. Please try again.");
+            return View(student);
+        }
+        
         return RedirectToAction("Index");
     }
     
@@ -95,7 +110,7 @@ public class StudentController : Controller
     {
         if (id == null) return NotFound();
         
-        var student = await _context.Students.FindAsync(id);
+        var student = await _studentService.GetStudentByIdAsync(id.Value);
         return student == null ? NotFound() : View(student);
     }
     
@@ -104,11 +119,17 @@ public class StudentController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Delete(int id)
     {
-        var student = await _context.Students.FindAsync(id);
+        var student = await _studentService.GetStudentByIdAsync(id);
         if (student == null) return NotFound();
 
-        _context.Students.Remove(student);
-        await _context.SaveChangesAsync();
+        var success = await _studentService.DeleteStudentAsync(student);
+       
+        if (!success)
+        {
+            ModelState.AddModelError("", "Failed to delete student. Please try again.");
+            return View(student);
+        }
+        
         return RedirectToAction("Index");
     }
 }

@@ -1,6 +1,6 @@
-namespace StudentApp.Models;
+namespace StudentApp.Services;
 
-public interface IEmailSender
+public interface IEmailService
 {
     public Task SendEmailAsync(string to, string subject, string message);
 }

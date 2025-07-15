@@ -221,3 +221,4 @@
 /Users/omerozanmart/Desktop/dotnet-examples/StudentApp/StudentApp/bin/Debug/net9.0/Newtonsoft.Json.dll
 /Users/omerozanmart/Desktop/dotnet-examples/StudentApp/StudentApp/bin/Debug/net9.0/SendGrid.dll
 /Users/omerozanmart/Desktop/dotnet-examples/StudentApp/StudentApp/bin/Debug/net9.0/StarkbankEcdsa.dll
+/Users/omerozanmart/Desktop/dotnet-examples/StudentApp/StudentApp/obj/Debug/net9.0/StudentApp.sourcelink.json
